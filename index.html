@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=https://t.me/Nomad_pdd_bot?start=tiktok">
 <title>Nomad PDD — TikTok</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +15,7 @@
     --ink-muted: #5B5F5E;
     --line: rgba(18,20,18,0.13);
     --accent: #8C6A16;
+    --accent-soft: rgba(140,106,22,0.12);
     --tg-blue: #229ED9;
     --tg-blue-dark: #1B84B5;
   }
@@ -27,6 +27,7 @@
       --ink-muted: #9CA0A0;
       --line: rgba(255,255,255,0.11);
       --accent: #E3B04E;
+      --accent-soft: rgba(227,176,78,0.14);
       --tg-blue: #2AABEE;
       --tg-blue-dark: #229ED9;
     }
@@ -38,6 +39,7 @@
     --ink-muted: #9CA0A0;
     --line: rgba(255,255,255,0.11);
     --accent: #E3B04E;
+    --accent-soft: rgba(227,176,78,0.14);
     --tg-blue: #2AABEE;
     --tg-blue-dark: #229ED9;
   }
@@ -50,10 +52,10 @@
     color: var(--ink);
     font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     min-height: 100%;
-    padding: 32px 20px;
+    padding: 28px 20px;
   }
 
   .card {
@@ -63,7 +65,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 22px;
+    gap: 20px;
   }
 
   .wordmark {
@@ -78,83 +80,127 @@
   }
   .wordmark .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 
-  .status {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
+  .status { display: flex; flex-direction: column; gap: 10px; align-items: center; }
 
   .spinner {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 3px solid var(--line);
-    border-top-color: var(--tg-blue);
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid var(--line); border-top-color: var(--tg-blue);
     animation: spin 0.85s linear infinite;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .spinner { animation: none; border-top-color: var(--line); }
-  }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--line); } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  h1 {
-    margin: 0;
-    font-size: 21px;
-    font-weight: 800;
-    line-height: 1.3;
-    text-wrap: balance;
-  }
-  p.sub {
-    margin: 0;
-    font-size: 14.5px;
-    color: var(--ink-muted);
-    line-height: 1.5;
-    max-width: 30ch;
-  }
+  h1 { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.3; text-wrap: balance; }
+  p.sub { margin: 0; font-size: 14.5px; color: var(--ink-muted); line-height: 1.5; max-width: 30ch; }
 
   .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 15px 22px;
-    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 15px 22px; border-radius: 14px;
     background: linear-gradient(180deg, var(--tg-blue), var(--tg-blue-dark));
-    color: #fff;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 16px;
-    text-decoration: none;
-    border: none;
+    color: #fff; font-family: inherit; font-weight: 700; font-size: 16px;
+    text-decoration: none; border: none;
     box-shadow: 0 10px 24px -10px rgba(34,158,217,0.55);
   }
   .btn:active { transform: translateY(1px); }
   .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .btn svg { width: 21px; height: 21px; flex-shrink: 0; }
 
-  .hint {
-    font-size: 12.5px;
-    color: var(--ink-muted);
-  }
+  .hint { font-size: 12.5px; color: var(--ink-muted); }
   .hint code {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+    padding: 1px 5px; font-size: 12px;
+  }
+
+  /* --- экран "открыто внутри TikTok/Instagram и т.п." --- */
+  .webview-notice {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .webview-notice.show { display: flex; }
+  .webview-notice .status { display: none; }
+
+  .corner-pointer {
+    position: fixed;
+    top: 8px;
+    right: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    color: var(--accent);
+    animation: bob 1.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) { .corner-pointer { animation: none; } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  .corner-pointer svg { width: 26px; height: 26px; transform: rotate(45deg); }
+  .corner-pointer span {
+    font-size: 11.5px; font-weight: 700; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+    color: var(--ink);
+  }
+
+  .steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 5px;
-    padding: 1px 5px;
-    font-size: 12px;
+    border-radius: 12px;
   }
+  .step .num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step p { margin: 0; font-size: 14px; line-height: 1.4; }
+  .step b { font-weight: 700; }
 </style>
 </head>
 <body>
   <div class="card">
     <div class="wordmark"><span class="dot"></span>Nomad PDD</div>
 
-    <div class="status">
+    <!-- вариант A: обычный браузер — пробуем открыть автоматически -->
+    <div class="status" id="autoStatus">
       <div class="spinner" aria-hidden="true"></div>
       <h1>Открываем Telegram…</h1>
       <p class="sub">Если ничего не произошло за пару секунд — нажмите кнопку ниже.</p>
+    </div>
+
+    <!-- вариант B: похоже на встроенный браузер TikTok/Instagram и т.п. -->
+    <div class="webview-notice" id="webviewNotice">
+      <h1>Сначала откройте эту страницу в браузере</h1>
+      <p class="sub">TikTok не даёт напрямую перейти в Telegram из своего окна — это ограничение самого приложения, а не нашей ссылки.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <p>Нажмите <b>⋯</b> (три точки) в правом верхнем углу этого экрана</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <p>Выберите <b>«Открыть в браузере»</b> (Open in browser / Safari)</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <p>На открывшейся странице нажмите кнопку «Открыть в Telegram» снова</p>
+        </div>
+      </div>
     </div>
 
     <a class="btn" id="openBtn" href="https://t.me/Nomad_pdd_bot?start=tiktok">
@@ -167,12 +213,33 @@
     <p class="hint">Ссылка: <code>t.me/Nomad_pdd_bot</code></p>
   </div>
 
+  <div class="corner-pointer" id="cornerPointer" style="display:none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <span>меню</span>
+  </div>
+
   <script>
     var DEST = "https://t.me/Nomad_pdd_bot?start=tiktok";
-    try {
-      window.location.replace(DEST);
-    } catch (e) {
-      window.location.href = DEST;
+    var ua = navigator.userAgent || "";
+    // Известные встроенные браузеры, которые намеренно блокируют переход по
+    // Universal Links (t.me) наружу в другое приложение — TikTok, Instagram,
+    // Facebook, WeChat и т.п. У них узнаваемая подпись в User-Agent.
+    var isInAppBrowser = /musical_ly|BytedanceWebview|TikTok|Instagram|FBAN|FBAV|FB_IAB|Line\/|MicroMessenger|Twitter/i.test(ua);
+
+    if (isInAppBrowser) {
+      document.getElementById("webviewNotice").classList.add("show");
+      document.getElementById("cornerPointer").style.display = "flex";
+      // Всё равно пробуем — вдруг именно на этом устройстве/версии сработает,
+      // но НЕ полагаемся на это (см. инструкцию выше).
+      try { window.location.replace(DEST); } catch (e) {}
+    } else {
+      try {
+        window.location.replace(DEST);
+      } catch (e) {
+        window.location.href = DEST;
+      }
     }
   </script>
 </body>
